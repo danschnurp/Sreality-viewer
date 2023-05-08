@@ -1,16 +1,43 @@
 version: '3'
 services:
   sreality_viewer:
-    build: ./sreality_viewer
-    ports:
-      - "8080:8081"
-    depends_on:
-      - db
+      build: ./sreality_viewer
+      restart: always
+      depends_on:
+        - db
+      environment:
+        DATABASE_URL: postgresql://postgres:sreality@db:5432/sreality
+      ports:
+        - "8080:8080"
   db:
     image: postgres
+    restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Praha123
+      POSTGRES_PASSWORD: sreality
       POSTGRES_DB: sreality
+    volumes:
+      - ./data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    command: postgres -c 'max_connections=500'
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  db-init:
+      image: postgres
+      depends_on:
+        - db
+      environment:
+        PGPASSWORD: sreality
+        PGUSER: postgres
+        PGHOST: db
+        PGPORT: "5432"
+      volumes:
+        - ./init.sql:/init.sql
+      command: /bin/bash -c "sleep 10 && psql -U postgres -f /init.sql"
+
+volumes:
+  postgresql-data:
