@@ -1,7 +1,7 @@
 version: '3'
 services:
-  app:
-    build: .
+  sreality_viewer:
+    build: ./sreality_viewer
     ports:
       - "8080:8081"
     depends_on:
@@ -12,3 +12,5 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Praha123
       POSTGRES_DB: sreality
+    ports:
+      - "5432:5432"

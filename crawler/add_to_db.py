@@ -2,7 +2,7 @@ import psycopg2
 import json
 
 
-# simple script that inserts data from results.json to postgres DB
+# simple script that inserts data from results.json to postgres DB ... local version
 
 def connect_to_db():
     conn = psycopg2.connect(

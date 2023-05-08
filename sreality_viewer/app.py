@@ -1,3 +1,5 @@
+import json
+
 import psycopg2
 from flask import Flask, g, render_template
 from psycopg2 import extras
@@ -56,6 +58,51 @@ def get_data():
     return render_template('index.html', results=results[50:60])
 
 
+def connect_to_db():
+    conn = psycopg2.connect(
+        "postgresql://postgres:Praha123@localhost:5432"
+    )
+    return conn
+
+
+def insert_cached_data(data):
+    conn = connect_to_db()
+
+    with conn.cursor() as cur:
+        cur.execute("""
+            CREATE DATABASE IF NOT EXISTS sreality
+                    WITH
+                    OWNER = postgres
+                    ENCODING = 'UTF8'
+                    CONNECTION LIMIT = -1
+                    IS_TEMPLATE = False;
+        """)
+
+    with conn.cursor() as cur:
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS results (
+                                  url_part TEXT,
+                                  title TEXT,
+                                  img TEXT
+                                );
+        """)
+
+    cur = conn.cursor()
+    for i in data:
+        cur.execute("""
+            INSERT INTO results (url_part, title, img)
+            VALUES (%s, %s, %s)
+        """, (i['url_part'], i['title'], i['img']))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 if __name__ == '__main__':
+    with open("./results.json") as f:
+        results = json.loads(f.read())
+    insert_cached_data(results)
+    print("db is scripted...")
     serve(app, port=8080)
     close_db()
