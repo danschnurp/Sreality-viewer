@@ -1,5 +1,4 @@
 import scrapy
-import psycopg2
 
 
 class SRealitySpider(scrapy.Spider):
