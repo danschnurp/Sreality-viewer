@@ -17,6 +17,7 @@ services:
       POSTGRES_DB: sreality
     volumes:
       - ./data:/var/lib/postgresql/data
+    hostname: db
     ports:
       - "5432:5432"
     command: postgres -c 'max_connections=500'
