@@ -40,5 +40,15 @@ services:
         - ./init.sql:/init.sql
       command: /bin/bash -c "sleep 10 && psql -U postgres -f /init.sql"
 
+
+  crawler:
+    build: ./crawler
+    environment:
+      POSTGRES_URI:  postgresql://postgres:sreality@db:5432/sreality
+    depends_on:
+      - db
+
+
+
 volumes:
   postgresql-data:

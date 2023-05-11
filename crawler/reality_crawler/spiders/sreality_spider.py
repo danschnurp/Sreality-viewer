@@ -2,7 +2,7 @@ import scrapy
 
 
 class SRealitySpider(scrapy.Spider):
-    name = 'SRealitySpider'
+    name = 'sreality_spider'
     # comprehension list of 25 (500 items) URLs  that the spider will start crawling from.    ( crawler sign)
     start_urls = ['https://www.sreality.cz/en/search/for-sale/apartments?page=' + str(i) + '&_escaped_fragment_='
                   for i in range(25)]
