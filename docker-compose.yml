@@ -15,8 +15,6 @@ services:
     environment:
       POSTGRES_PASSWORD: sreality
       POSTGRES_DB: sreality
-    volumes:
-      - ./data:/var/lib/postgresql/data
     hostname: db
     ports:
       - "5432:5432"
@@ -26,19 +24,6 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
-
-  db-init:
-      image: postgres
-      depends_on:
-        - db
-      environment:
-        PGPASSWORD: sreality
-        PGUSER: postgres
-        PGHOST: db
-        PGPORT: "5432"
-      volumes:
-        - ./init.sql:/init.sql
-      command: /bin/bash -c "sleep 10 && psql -U postgres -f /init.sql"
 
 
   crawler:

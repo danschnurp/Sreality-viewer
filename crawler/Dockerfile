@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["scrapy", "crawl", "sreality_spider"]
+CMD ["python", "run_spider.py", "crawl", "sreality_spider"]

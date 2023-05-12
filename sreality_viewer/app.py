@@ -1,4 +1,5 @@
 import json
+import time
 
 import psycopg2
 from flask import Flask, g, render_template
@@ -49,11 +50,12 @@ def get_data():
         parted_pictues = i[2].split("\"")
         i[2] = [parted_pictues[1], parted_pictues[3], parted_pictues[5]]
     # viewing 10 results only due to politeness for seznam cz
-    return render_template('index.html', results=results[50:60])
-
+    return render_template('index.html', results=results)
 
 
 if __name__ == '__main__':
-    print("db is scripted...")
+    print("db is scripting...")
+    time.sleep(180)
+    print("db is scripted!")
     serve(app, port=8080)
     close_db()

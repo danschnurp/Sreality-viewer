@@ -5,13 +5,18 @@
 
 
 # useful for handling different item types with a single interface
+import time
+
 import psycopg2
 from itemadapter import ItemAdapter
+from psycopg2 import sql
 
 
 class PostgresPipeline:
     def __init__(self, postgres_uri):
+        time.sleep(20)
         self.postgres_uri = postgres_uri
+        self.connection = psycopg2.connect(self.postgres_uri[:-8])
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -19,7 +24,28 @@ class PostgresPipeline:
         return cls(postgres_uri)
 
     def open_spider(self, spider):
+
+        # cursor = self.connection.cursor()
+        self.connection.autocommit = True  # !
+        #
+        # create_cmd = sql.SQL('CREATE DATABASE sreality;')
+        # cursor.execute(create_cmd)
+        # cursor.close()
+        # self.connection.close()
+
         self.connection = psycopg2.connect(self.postgres_uri)
+        cursor = self.connection.cursor()
+        query = """
+        
+        DROP TABLE IF EXISTS results;
+        
+        CREATE TABLE results (
+             url_part TEXT,
+            title TEXT,
+           img TEXT
+        );
+        """
+        cursor.execute(query)
 
     def close_spider(self, spider):
         self.connection.close()
