@@ -1,2 +1,2 @@
-Scrapy~=2.9.0
+Scrapy~=2.10.1
 psycopg2-binary~=2.9.6
